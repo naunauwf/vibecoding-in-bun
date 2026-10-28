@@ -2,7 +2,8 @@
 
 A modern backend setup powered by **Bun**, **ElysiaJS**, and **Drizzle ORM** with **MySQL**.
 
-## 🚀 Tech Stack
+## Tech Stack
+
 - **Runtime**: [Bun](https://bun.sh/)
 - **Framework**: [ElysiaJS](https://elysiajs.com/)
 - **ORM**: [Drizzle ORM](https://orm.drizzle.team/)
@@ -11,7 +12,8 @@ A modern backend setup powered by **Bun**, **ElysiaJS**, and **Drizzle ORM** wit
 
 ---
 
-## 📁 Project Structure
+## Project Structure
+
 ```text
 ├── src/
 │   ├── config/
@@ -31,43 +33,55 @@ A modern backend setup powered by **Bun**, **ElysiaJS**, and **Drizzle ORM** wit
 
 ---
 
-## ⚙️ Getting Started
+## Getting Started
 
 ### 1. Install Dependencies
+
 ```bash
 bun install
 ```
 
 ### 2. Configure Environment Variables
+
 Copy the example env file and adjust your database connection:
+
 ```bash
 cp .env.example .env
 ```
 
 ### 3. Run Development Server
+
 ```bash
 bun run dev
 ```
+
 The server will start at `http://localhost:3000`.
 
 ---
 
-## 🗄️ Database Commands
+## Database Commands
+
 - **Generate Migrations**:
+
   ```bash
   bun run db:generate
   ```
+
 - **Apply Migrations**:
+
   ```bash
   bun run db:migrate
   ```
+
 - **Open Drizzle Studio**:
+
   ```bash
   bun run db:studio
   ```
 
 ---
 
-## 📡 API Endpoints
+## API Endpoints
+
 - `GET /`: API welcome message and status.
 - `GET /health`: Health-check endpoint reporting server uptime and database connectivity.
