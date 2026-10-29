@@ -8,6 +8,13 @@
       "when": 1793204235237,
       "tag": "0000_massive_proteus",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1793289730767,
+      "tag": "0001_clear_nitro",
+      "breakpoints": true
     }
   ]
 }
