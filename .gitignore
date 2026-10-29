@@ -8,7 +8,9 @@ node_modules/
 
 # temporary / notes
 prompts.txt
+prompted.txt
 issue.md
+issued.md
 
 # OS / editor
 .DS_Store
