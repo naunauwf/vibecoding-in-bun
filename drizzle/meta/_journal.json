@@ -15,6 +15,13 @@
       "when": 1793289730767,
       "tag": "0001_clear_nitro",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1793723100616,
+      "tag": "0002_milky_thor_girl",
+      "breakpoints": true
     }
   ]
 }
