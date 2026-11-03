@@ -13,6 +13,13 @@ export interface LoginUserInput {
   password: string;
 }
 
+export interface CurrentUserData {
+  id: number;
+  name: string;
+  email: string;
+  created_at: Date;
+}
+
 export interface ServiceResult<T> {
   success: boolean;
   data?: T;
@@ -112,6 +119,49 @@ export async function loginUserService(
     return {
       success: true,
       data: { data: token },
+      statusCode: 200,
+    };
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+export async function getCurrentUserService(
+  token: string
+): Promise<ServiceResult<{ data: CurrentUserData }>> {
+  try {
+    if (!token) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        statusCode: 401,
+      };
+    }
+
+    const result = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        created_at: users.createdAt,
+      })
+      .from(sessions)
+      .innerJoin(users, eq(sessions.userId, users.id))
+      .where(eq(sessions.token, token))
+      .limit(1);
+
+    const currentUser = result[0];
+    if (!currentUser) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        statusCode: 401,
+      };
+    }
+
+    return {
+      success: true,
+      data: { data: currentUser },
       statusCode: 200,
     };
   } catch (error: any) {
