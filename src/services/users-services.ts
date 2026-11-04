@@ -168,3 +168,41 @@ export async function getCurrentUserService(
     throw error;
   }
 }
+
+export async function logoutUserService(
+  token: string
+): Promise<ServiceResult<{ data: string }>> {
+  try {
+    if (!token) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        statusCode: 401,
+      };
+    }
+
+    const existingSession = await db
+      .select({ id: sessions.id })
+      .from(sessions)
+      .where(eq(sessions.token, token))
+      .limit(1);
+
+    if (existingSession.length === 0) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        statusCode: 401,
+      };
+    }
+
+    await db.delete(sessions).where(eq(sessions.token, token));
+
+    return {
+      success: true,
+      data: { data: "OK" },
+      statusCode: 200,
+    };
+  } catch (error: any) {
+    throw error;
+  }
+}
