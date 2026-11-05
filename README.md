@@ -11,6 +11,7 @@ Aplikasi backend RESTful API modern yang dibangun menggunakan runtime Bun, frame
 - [Arsitektur dan Struktur Proyek](#arsitektur-dan-struktur-proyek)
 - [Skema Database](#skema-database)
 - [Dokumentasi API](#dokumentasi-api)
+- [Dokumentasi Interaktif Swagger](#dokumentasi-interaktif-swagger)
 - [Persyaratan Sistem](#persyaratan-sistem)
 - [Panduan Setup Proyek](#panduan-setup-proyek)
 - [Cara Menjalankan Aplikasi](#cara-menjalankan-aplikasi)
@@ -37,6 +38,7 @@ Aplikasi ini mengimplementasikan sistem manajemen pengguna dan otentikasi berbas
 
 - **Runtime & Package Manager**: [Bun](https://bun.sh/) (v1.x) - Runtime JavaScript/TypeScript berkinerja tinggi.
 - **Web Framework**: [ElysiaJS](https://elysiajs.com/) (`elysia`) - Framework HTTP cepat dan ergonomis untuk Bun.
+- **Dokumentasi API (OpenAPI/Swagger)**: [@elysiajs/swagger](https://elysiajs.com/plugins/swagger.html) - Plugin resmi untuk integrasi antarmuka Swagger UI dan OpenAPI spec otomatis.
 - **Object-Relational Mapping (ORM)**: [Drizzle ORM](https://orm.drizzle.team/) (`drizzle-orm`) - TypeScript ORM berbasis SQL yang type-safe dan ringan.
 - **Database Driver**: [MySQL2](https://github.com/sidorares/node-mysql2) (`mysql2`) - Client MySQL untuk Node.js dan Bun dengan dukungan Connection Pool dan Promise.
 - **Database Engine**: MySQL (versi 8.0 atau MariaDB yang kompatibel).
@@ -321,6 +323,23 @@ Menghapus sesi pengguna dari database sehingga token tidak dapat digunakan lagi.
       "error": "Unauthorized"
     }
     ```
+
+---
+
+## Dokumentasi Interaktif Swagger
+
+Aplikasi ini dilengkapi dengan antarmuka web interaktif **Swagger UI** berbasis spesifikasi OpenAPI v3:
+
+- **Alamat Swagger UI**: [http://localhost:3000/swagger](http://localhost:3000/swagger)
+- **Alamat OpenAPI JSON Spec**: [http://localhost:3000/swagger/json](http://localhost:3000/swagger/json)
+
+### Fitur Swagger UI:
+1. **Eksplorasi Endpoint**: Melihat daftar endpoint, parameter, dan skema request/response secara visual.
+2. **Uji Coba Langsung (Try it out)**: Mengirimkan request langsung dari browser ke server lokal.
+3. **Otentikasi Bearer Token**:
+   - Klik tombol **Authorize** di bagian kanan atas halaman Swagger UI.
+   - Masukkan token sesi UUID (didapat dari response endpoint `/api/users/login`) pada kolom input.
+   - Klik **Authorize**, dan seluruh request ke endpoint terproteksi (`/api/users/current` dan `/api/users/logout`) otomatis menyertakan header `Authorization: Bearer <token>`.
 
 ---
 

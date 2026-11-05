@@ -43,6 +43,11 @@ export const usersRoute = new Elysia({ prefix: "/api/users" })
       return result.data;
     },
     {
+      detail: {
+        tags: ["Users"],
+        summary: "Registrasi User Baru",
+        description: "Mendaftarkan user baru dengan nama, email, dan password.",
+      },
       // Skema validasi body request registrasi
       body: t.Object({
         name: t.String({ minLength: 1, maxLength: 256 }),
@@ -72,6 +77,11 @@ export const usersRoute = new Elysia({ prefix: "/api/users" })
       return result.data;
     },
     {
+      detail: {
+        tags: ["Users"],
+        summary: "Login User",
+        description: "Mengautentikasi kredensial email dan password serta menghasilkan token sesi UUID.",
+      },
       // Skema validasi body request login
       body: t.Object({
         email: t.String({ minLength: 1 }),
@@ -85,43 +95,65 @@ export const usersRoute = new Elysia({ prefix: "/api/users" })
    * Mengambil data profil pengguna yang sedang login berdasarkan token sesi Bearer.
    * Field sensitif seperti password dikecualikan dari data yang dikembalikan.
    */
-  .get("/current", async ({ headers, set }) => {
-    // Ekstraksi dan validasi format header Authorization: Bearer <token>
-    const token = extractBearerToken(headers["authorization"]);
-    if (!token) {
-      set.status = 401;
-      return { error: "Unauthorized" };
-    }
+  .get(
+    "/current",
+    async ({ headers, set }) => {
+      // Ekstraksi dan validasi format header Authorization: Bearer <token>
+      const token = extractBearerToken(headers["authorization"]);
+      if (!token) {
+        set.status = 401;
+        return { error: "Unauthorized" };
+      }
 
-    const result = await getCurrentUserService(token);
-    if (!result.success) {
+      const result = await getCurrentUserService(token);
+      if (!result.success) {
+        set.status = result.statusCode;
+        return { error: result.error };
+      }
+
       set.status = result.statusCode;
-      return { error: result.error };
+      return result.data;
+    },
+    {
+      detail: {
+        tags: ["Users"],
+        summary: "Get Current User Profile",
+        description: "Mengambil data profil pengguna yang sedang login berdasarkan Bearer token.",
+        security: [{ bearerAuth: [] }],
+      },
     }
-
-    set.status = result.statusCode;
-    return result.data;
-  })
+  )
 
   /**
    * Endpoint: DELETE /api/users/logout
    * Mengakhiri sesi pengguna aktif dengan menghapus record token dari tabel database sessions.
    * Memastikan token yang telah di-logout tidak dapat digunakan kembali.
    */
-  .delete("/logout", async ({ headers, set }) => {
-    // Ekstraksi dan validasi format header Authorization: Bearer <token>
-    const token = extractBearerToken(headers["authorization"]);
-    if (!token) {
-      set.status = 401;
-      return { error: "Unauthorized" };
-    }
+  .delete(
+    "/logout",
+    async ({ headers, set }) => {
+      // Ekstraksi dan validasi format header Authorization: Bearer <token>
+      const token = extractBearerToken(headers["authorization"]);
+      if (!token) {
+        set.status = 401;
+        return { error: "Unauthorized" };
+      }
 
-    const result = await logoutUserService(token);
-    if (!result.success) {
+      const result = await logoutUserService(token);
+      if (!result.success) {
+        set.status = result.statusCode;
+        return { error: result.error };
+      }
+
       set.status = result.statusCode;
-      return { error: result.error };
+      return result.data;
+    },
+    {
+      detail: {
+        tags: ["Users"],
+        summary: "Logout User",
+        description: "Mengakhiri sesi pengguna dengan menghapus token sesi dari database.",
+        security: [{ bearerAuth: [] }],
+      },
     }
-
-    set.status = result.statusCode;
-    return result.data;
-  });
+  );
