@@ -46,7 +46,6 @@ Aplikasi ini mengimplementasikan sistem manajemen pengguna dan otentikasi berbas
 
 ### Komponen Pendukung Bawaan Runtime
 
-
 - **Validasi Data**: TypeBox (`t` dari pustaka ElysiaJS) untuk validasi schema request body secara runtime dan compile-time.
 - **Kriptografi & Password Hashing**: `Bun.password.hash` dan `Bun.password.verify` dengan algoritma bcrypt (cost factor 10) tanpa memerlukan pustaka eksternal.
 - **Token Generator**: Web Crypto API native (`crypto.randomUUID()`) untuk menghasilkan identifier sesi yang unik.
@@ -333,7 +332,8 @@ Aplikasi ini dilengkapi dengan antarmuka web interaktif **Swagger UI** berbasis 
 - **Alamat Swagger UI**: [http://localhost:3000/swagger](http://localhost:3000/swagger)
 - **Alamat OpenAPI JSON Spec**: [http://localhost:3000/swagger/json](http://localhost:3000/swagger/json)
 
-### Fitur Swagger UI:
+### Fitur Swagger UI
+
 1. **Eksplorasi Endpoint**: Melihat daftar endpoint, parameter, dan skema request/response secara visual.
 2. **Uji Coba Langsung (Try it out)**: Mengirimkan request langsung dari browser ke server lokal.
 3. **Otentikasi Bearer Token**:
