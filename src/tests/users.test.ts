@@ -16,6 +16,47 @@ describe("Simulasi API Users & Auth", () => {
       const body = (await response.json()) as { error: string };
       expect(body).toHaveProperty("error");
     });
+
+    it("harus gagal validasi (400) jika panjang nama 257 karakter (melebihi batas maksimum 256 karakter)", async () => {
+      const longName = "a".repeat(257);
+      const response = await app.handle(
+        new Request("http://localhost:3000/api/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: longName,
+            email: "toolong@example.com",
+            password: "password123",
+          }),
+        })
+      );
+
+      expect(response.status).toBe(400);
+      const body = (await response.json()) as { error: string };
+      expect(body).toHaveProperty("error");
+      expect(body.error).toContain("Expected string length less or equal to 256");
+    });
+
+    it("tidak boleh gagal validasi panjang string jika panjang nama tepat 256 karakter", async () => {
+      const validName256 = "a".repeat(256);
+      const response = await app.handle(
+        new Request("http://localhost:3000/api/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: validName256,
+            email: "valid256@example.com",
+            password: "password123",
+          }),
+        })
+      );
+
+      // Jika ada error, error tidak boleh berasal dari validasi panjang nama
+      if (response.status === 400) {
+        const body = (await response.json()) as { error: string };
+        expect(body.error).not.toContain("Expected string length less or equal");
+      }
+    });
   });
 
   describe("POST /api/users/login (Login)", () => {

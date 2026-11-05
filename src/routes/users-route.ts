@@ -29,7 +29,7 @@ export const usersRoute = new Elysia({ prefix: "/api/users" })
     },
     {
       body: t.Object({
-        name: t.String({ minLength: 1, maxLength: 100 }),
+        name: t.String({ minLength: 1, maxLength: 256 }),
         email: t.String({ minLength: 1, maxLength: 100 }),
         password: t.String({ minLength: 1, maxLength: 255 }),
       }),
