@@ -3,7 +3,9 @@ import {
   registerUserService,
   loginUserService,
   getCurrentUserService,
+  logoutUserService,
 } from "../services/users-services";
+import { extractBearerToken } from "../utils/auth";
 
 export const usersRoute = new Elysia({ prefix: "/api/users" })
   .onError(({ code, error, set }) => {
@@ -54,19 +56,29 @@ export const usersRoute = new Elysia({ prefix: "/api/users" })
     }
   )
   .get("/current", async ({ headers, set }) => {
-    const authorization = headers["authorization"];
-    if (!authorization || !authorization.startsWith("Bearer ")) {
-      set.status = 401;
-      return { error: "Unauthorized" };
-    }
-
-    const token = authorization.slice(7).trim();
+    const token = extractBearerToken(headers["authorization"]);
     if (!token) {
       set.status = 401;
       return { error: "Unauthorized" };
     }
 
     const result = await getCurrentUserService(token);
+    if (!result.success) {
+      set.status = result.statusCode;
+      return { error: result.error };
+    }
+
+    set.status = result.statusCode;
+    return result.data;
+  })
+  .delete("/logout", async ({ headers, set }) => {
+    const token = extractBearerToken(headers["authorization"]);
+    if (!token) {
+      set.status = 401;
+      return { error: "Unauthorized" };
+    }
+
+    const result = await logoutUserService(token);
     if (!result.success) {
       set.status = result.statusCode;
       return { error: result.error };

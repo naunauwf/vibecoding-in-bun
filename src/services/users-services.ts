@@ -122,6 +122,17 @@ export async function loginUserService(
       statusCode: 200,
     };
   } catch (error: any) {
+    if (
+      error?.code?.startsWith("ER_") ||
+      error?.code === "ECONNREFUSED" ||
+      error?.message?.includes("Failed query")
+    ) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        statusCode: 401,
+      };
+    }
     throw error;
   }
 }
@@ -165,6 +176,62 @@ export async function getCurrentUserService(
       statusCode: 200,
     };
   } catch (error: any) {
+    // DB errors (connection failure, query error) on auth checks surface as Unauthorized
+    if (
+      error?.code?.startsWith("ER_") ||
+      error?.code === "ECONNREFUSED" ||
+      error?.message?.includes("Failed query")
+    ) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        statusCode: 401,
+      };
+    }
+    throw error;
+  }
+}
+
+// Improvement: single DELETE + affectedRows check eliminates the extra SELECT round-trip
+export async function logoutUserService(
+  token: string
+): Promise<ServiceResult<{ data: string }>> {
+  try {
+    if (!token) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        statusCode: 401,
+      };
+    }
+
+    const [result] = await db.delete(sessions).where(eq(sessions.token, token));
+
+    if (result.affectedRows === 0) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        statusCode: 401,
+      };
+    }
+
+    return {
+      success: true,
+      data: { data: "OK" },
+      statusCode: 200,
+    };
+  } catch (error: any) {
+    if (
+      error?.code?.startsWith("ER_") ||
+      error?.code === "ECONNREFUSED" ||
+      error?.message?.includes("Failed query")
+    ) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        statusCode: 401,
+      };
+    }
     throw error;
   }
 }
