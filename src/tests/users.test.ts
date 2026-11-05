@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { app } from "../src/index";
+import { app } from "../index";
 
 describe("Simulasi API Users & Auth", () => {
   describe("POST /api/users (Registrasi)", () => {

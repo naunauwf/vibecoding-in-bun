@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { extractBearerToken } from "../../src/utils/auth";
+import { extractBearerToken } from "../../utils/auth";
 
 describe("extractBearerToken", () => {
   it("harus mengembalikan null jika header undefined", () => {
