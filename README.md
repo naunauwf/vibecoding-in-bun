@@ -85,6 +85,7 @@ vibecoding-in-bun/
 │   ├── 0001_clear_nitro.sql
 │   ├── 0002_milky_thor_girl.sql
 │   ├── 0003_wealthy_frightful_four.sql
+│   ├── 0004_clear_titanium_man.sql
 │   └── meta/                 # Snapshot metadata schema Drizzle
 ├── src/
 │   ├── config/
@@ -121,24 +122,24 @@ Skema database didefinisikan menggunakan Drizzle ORM MySQL dialect pada berkas `
 
 Menyimpan identitas data pengguna aplikasi.
 
-| Nama Kolom   | Tipe Data      | Batasan (Constraints)              | Keterangan                              |
-|--------------|----------------|------------------------------------|-----------------------------------------|
-| `id`         | `serial` (int) | Primary Key, Auto Increment        | Identitas unik user                     |
-| `name`       | `varchar(256)` | Not Null                           | Nama lengkap pengguna (maks 256 char)   |
-| `email`      | `varchar(100)` | Not Null, Unique                   | Alamat email unik pengguna              |
-| `password`   | `varchar(255)` | Not Null                           | Hash password (bcrypt)                  |
-| `created_at` | `timestamp`    | Not Null, Default `current_timestamp` | Waktu user didaftarkan                  |
+| Nama Kolom   | Tipe Data                  | Batasan (Constraints)              | Keterangan                              |
+|--------------|----------------------------|------------------------------------|-----------------------------------------|
+| `id`         | `serial` (bigint unsigned) | Primary Key, Auto Increment        | Identitas unik user                     |
+| `name`       | `varchar(256)`             | Not Null                           | Nama lengkap pengguna (maks 256 char)   |
+| `email`      | `varchar(100)`             | Not Null, Unique                   | Alamat email unik pengguna              |
+| `password`   | `varchar(255)`             | Not Null                           | Hash password (bcrypt)                  |
+| `created_at` | `timestamp`                | Not Null, Default `current_timestamp` | Waktu user didaftarkan                  |
 
 ### 2. Tabel `sessions`
 
 Menyimpan token sesi aktif dari pengguna yang telah login.
 
-| Nama Kolom   | Tipe Data      | Batasan (Constraints)              | Keterangan                              |
-|--------------|----------------|------------------------------------|-----------------------------------------|
-| `id`         | `serial` (int) | Primary Key, Auto Increment        | Identitas unik sesi                     |
-| `token`      | `varchar(255)` | Not Null                           | Token sesi login (string UUID)          |
-| `user_id`    | `int`          | Not Null, Foreign Key              | Mereferensikan kolom `id` tabel `users` |
-| `created_at` | `timestamp`    | Not Null, Default `current_timestamp` | Waktu sesi dibuat                       |
+| Nama Kolom   | Tipe Data                  | Batasan (Constraints)              | Keterangan                              |
+|--------------|----------------------------|------------------------------------|-----------------------------------------|
+| `id`         | `serial` (bigint unsigned) | Primary Key, Auto Increment        | Identitas unik sesi                     |
+| `token`      | `varchar(255)`             | Not Null                           | Token sesi login (string UUID)          |
+| `user_id`    | `bigint unsigned`          | Not Null, Foreign Key              | Mereferensikan kolom `id` tabel `users` |
+| `created_at` | `timestamp`                | Not Null, Default `current_timestamp` | Waktu sesi dibuat                       |
 
 ---
 
@@ -500,7 +501,15 @@ Menjalankan semua berkas migrasi SQL yang belum diterapkan ke database aktif:
 bun run db:migrate
 ```
 
-### 3. Membuka Drizzle Studio GUI
+### 3. Sinkronisasi Skema Langsung ke Database (Push)
+
+Mendorong perubahan skema `src/db/schema.ts` secara langsung ke database tanpa membuat berkas migrasi SQL (berguna untuk prototyping atau menyelaraskan database development):
+
+```bash
+bun run db:push
+```
+
+### 4. Membuka Drizzle Studio GUI
 
 Membuka antarmuka visual berbasis web di browser lokal untuk melihat dan mengelola data tabel secara langsung:
 
